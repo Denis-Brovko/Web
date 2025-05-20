@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контактна форма</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --error: #f72585;
+            --success: #4cc9f0;
+            --gray: #adb5bd;
+            --light: #f8f9fa;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-container:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+        }
+        
+        input:focus {
+            border-color: var(--primary-light);
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+            outline: none;
+        }
+        
+        input.error-border {
+            border-color: var(--error);
+        }
+        
+        .error {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        button:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .success-message {
+            display: none;
+            background: var(--success);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Контактна форма</h1>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="name">Ім'я*</label>
+                <input type="text" id="name" placeholder="Введіть ваше ім'я">
+                <div id="nameError" class="error">Будь ласка, введіть ваше ім'я</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <input type="text" id="email" placeholder="Введіть ваш email">
+                <div id="emailError" class="error">Будь ласка, введіть коректний email</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Вік</label>
+                <input type="number" id="age" placeholder="Введіть ваш вік">
+                <div id="ageError" class="error">Вік повинен бути додатнім числом</div>
+            </div>
+            
+            <button type="submit">Надіслати</button>
+            <div id="successMessage" class="success-message">Форма успішно відправлена!</div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.error').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('input').forEach(input => {
+                input.classList.remove('error-border');
+            });
+            document.getElementById('successMessage').style.display = 'none';
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const age = document.getElementById('age').value;
+        
+            let isValid = true;
+            if (name === '') {
+                document.getElementById('nameError').style.display = 'block';
+                document.getElementById('name').classList.add('error-border');
+                isValid = false;
+            }
+            if (email === '' || !email.includes('@') || !email.includes('.')) {
+                document.getElementById('emailError').style.display = 'block';
+                document.getElementById('email').classList.add('error-border');
+                isValid = false;
+            }
+            if (age && (isNaN(age) || parseInt(age) <= 0)) {
+                document.getElementById('ageError').style.display = 'block';
+                document.getElementById('age').classList.add('error-border');
+                isValid = false;
+            }
+            if (isValid) {
+                document.getElementById('successMessage').style.display = 'block';
+                setTimeout(() => {
+                    this.reset();
+                    document.getElementById('successMessage').style.display = 'none';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
